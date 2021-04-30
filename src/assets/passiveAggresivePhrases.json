@@ -1,0 +1,11 @@
+{
+    "phrases": [
+        {
+            "detect": "([Tt]hanks in advance|TIA)",
+            "strength": 3,
+            "why": "Assumptive and directive. It may be interpreted as \"You will do this, not matter what\".",
+            "replace": ""
+        },
+        {}
+    ]
+}
