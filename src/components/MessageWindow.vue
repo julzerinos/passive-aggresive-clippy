@@ -113,6 +113,10 @@ export default class MessageWindow extends Vue {}
     bottom: 0;
 }
 
+.scaler:hover {
+    cursor: nw-resize;
+}
+
 img {
     image-rendering: pixelated;
     z-index: 5;
@@ -143,8 +147,5 @@ img {
 
     margin: 0;
     padding: 0;
-
-    overflow: auto;
-    background: transparent;
 }
 </style>
