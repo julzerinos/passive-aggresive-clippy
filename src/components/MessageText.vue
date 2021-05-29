@@ -1,37 +1,72 @@
 <template>
-    <div ref="parent">
+    <div>
+        <div id="copy" :ref="`${mark[3]}`" v-for="mark of marks" :key="mark[3]">
+            {{ mark[0] }}<mark @click="onClickMark">{{ mark[1] }}</mark
+            >{{ mark[2] }}{{ message.slice(-1) === '\n' ? '\n.' : '' }}
+        </div>
+
         <textarea
+            ref="text"
             id="text"
             v-model="message"
             @input="messageChanged"
             placeholder="Start typing your email message..."
+            :onscroll="scrollAll"
         />
-        <div ref="copy" id="copy" />
     </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
-import { parseMarks } from '@/util/parse'
+import { parseMarksIntoDOM } from '@/util/parse'
 
 @Options({
     name: 'MessageText',
     data: function (): any {
         return {
-            message: null,
+            message: '',
         }
+    },
+    updated() {
+        this.scrollAll()
     },
     methods: {
         messageChanged: function (e: InputEvent): void {
             // on message change by textarea event
         },
-        updateCopy: function (newMessage: string): void {
-            this.$refs.copy.innerHTML = parseMarks(newMessage)
+        onClickMark: function (event: MouseEvent) {
+            console.log(event)
+
+            // this.$refs.text.setCaretPosition(0)
+
+            // document.elementFromPoint(event.clientX, event.clientY)?.click()
+            this.click(event.clientX, event.clientY)
+        },
+        click: function (x: number, y: number) {
+            const ev = new MouseEvent('click', {
+                view: window,
+                bubbles: true,
+                cancelable: true,
+                screenX: x,
+                screenY: y,
+            })
+
+            this.$refs.text.dispatchEvent(ev)
+        },
+        scrollAll: function () {
+            for (const c of this.marks)
+                if (c[3] in this.$refs)
+                    this.$refs[c[3]].scrollTo(0, this.$refs.text.scrollTop)
+        },
+    },
+    computed: {
+        marks: function () {
+            return parseMarksIntoDOM(this.message)
         },
     },
     watch: {
         message: function (v: string): void {
-            this.updateCopy(v)
+            v
         },
     },
 })
@@ -39,12 +74,18 @@ export default class MessageText extends Vue {}
 </script>
 
 <style scoped>
+mark {
+    color: transparent;
+    background-color: #00d9ff4d;
+
+    pointer-events: all;
+}
+
+mark:hover {
+    background-color: blue;
+}
+
 #text {
-    width: 100%;
-    height: 100%;
-
-    box-sizing: border-box;
-
     overflow: auto;
     background: transparent;
 
@@ -52,7 +93,7 @@ export default class MessageText extends Vue {}
 
     padding: 0;
 
-    color: red;
+    color: black;
 }
 
 #text:focus {
@@ -61,6 +102,14 @@ export default class MessageText extends Vue {}
 
 #text,
 #copy {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    left: 0;
+    top: 0;
+
+    box-sizing: border-box;
+
     border: solid 4px transparent;
 
     font-family: 'Times New Roman', Times, serif;
@@ -68,13 +117,26 @@ export default class MessageText extends Vue {}
 }
 
 #copy {
-    position: absolute;
-    top: 0;
-    left: 0;
+    overflow-y: auto;
 
-    white-space: pre;
+    word-wrap: break-word;
+    white-space: pre-wrap;
 
     color: transparent;
+
+    pointer-events: none;
+
+    -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+
+div::-webkit-scrollbar {
+    background-color: transparent;
 }
 
 textarea::-webkit-scrollbar {

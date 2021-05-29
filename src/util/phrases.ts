@@ -6,7 +6,7 @@ export interface Phrase {
 }
 
 export interface Detected {
-    indicies: Array<number>
+    indices: Array<number>
     phrase: Phrase
 }
 

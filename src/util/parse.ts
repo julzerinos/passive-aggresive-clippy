@@ -8,7 +8,7 @@ export const testString = (message: string): Array<Detected> => {
             for (const m of matches)
                 if (m.index !== undefined)
                     detected.push({
-                        indicies: [m.index, m.index + m[0].length],
+                        indices: [m.index, m.index + m[0].length],
                         phrase: p,
                     })
         }
@@ -16,31 +16,33 @@ export const testString = (message: string): Array<Detected> => {
     return detected
 }
 
-export const parseMarksIntoDOM = function*(input: string) {
-    for (const d of testString(input)) {
-        yield {
-            ...d,
-        }
-    }
+export const parseMarksIntoDOM = function(input: string) {
+    const splits = []
+    for (const d of testString(input))
+        splits.push(splitByIndicies(input, d.indices))
+
+    return splits
 }
 
 export const parseMarksIntoHTML = (input: string): string => {
     const mark = 'mark style="color: transparent; background-color: #05123322"'
 
     for (const d of testString(input)) {
-        input = addTag(input, d.indicies, mark)
+        input = addTag(splitByIndicies(input, d.indices), mark)
     }
 
     return input
 }
 
-const addTag = (string: string, indices: Array<number>, tag: string): string =>
-    string.slice(0, indices[0]) +
-    '<' +
-    tag +
-    '>' +
-    string.slice(indices[0], indices[1]) +
-    '</' +
-    tag +
-    '>' +
-    string.slice(indices[1])
+const splitByIndicies = (
+    string: string,
+    indices: Array<number>,
+): Array<string> => [
+    string.slice(0, indices[0]),
+    string.slice(indices[0], indices[1]),
+    string.slice(indices[1]),
+    `${indices[0]}i${indices[1]}`
+]
+
+const addTag = (splits: Array<string>, tag: string): string =>
+    splits[0] + '<' + tag + '>' + splits[1] + '</' + tag + '>' + splits[2]
