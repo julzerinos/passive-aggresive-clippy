@@ -1,8 +1,18 @@
 <template>
     <div>
-        <div id="copy" :ref="`${mark[3]}`" v-for="mark of marks" :key="mark[3]">
-            {{ mark[0] }}<mark @click="onClickMark">{{ mark[1] }}</mark
-            >{{ mark[2] }}{{ message.slice(-1) === '\n' ? '\n.' : '' }}
+        <div
+            class="copy"
+            v-for="{ splits, id, phrase } of marks"
+            :ref="`${id}`"
+            :key="id"
+        >
+            {{ splits[0]
+            }}<mark
+            @mouseover="(e) => onClickMark(e, phrase)"
+                :style="generateMarkStyle(phrase.strength)"
+                @click="(e) => onClickMark(e, phrase)"
+                >{{ splits[1] }}</mark
+            >{{ splits[2] }}{{ message.slice(-1) === '\n' ? '\n.' : '' }}
         </div>
 
         <textarea
@@ -13,36 +23,59 @@
             placeholder="Start typing your email message..."
             :onscroll="scrollAll"
         />
+
+        <Clippy ref="clippy" />
     </div>
 </template>
 
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
+import Clippy from './Clippy.vue'
+
+import { strengths } from '@/util/phrases'
 import { parseMarksIntoDOM } from '@/util/parse'
+import { Mark } from '@/types/Mark'
+import { Phrase } from '@/types/Phrase'
 
 @Options({
     name: 'MessageText',
     data: function (): any {
         return {
             message: '',
+            agent: null,
+            agentShown: false,
         }
     },
-    updated() {
+    components: {
+        Clippy,
+    },
+    updated(): void {
         this.scrollAll()
     },
     methods: {
+        test: function () {
+            console.log('hovering')
+        },
+        generateMarkStyle: (strength: number): any => ({
+            backgroundColor: strengths[strength],
+        }),
         messageChanged: function (e: InputEvent): void {
             // on message change by textarea event
         },
-        onClickMark: function (event: MouseEvent) {
-            console.log(event)
+        onClickMark: function (event: MouseEvent, phrase: Phrase): void {
+            // this.agent.stopCurrent()
+            // this.agent.play(this.agent.animations()[2])
 
             // this.$refs.text.setCaretPosition(0)
 
             // document.elementFromPoint(event.clientX, event.clientY)?.click()
+
+            this.$refs.clippy.move(event.clientX, event.clientY)
+            this.$refs.clippy.speak(phrase.why)
+
             this.click(event.clientX, event.clientY)
         },
-        click: function (x: number, y: number) {
+        click: function (x: number, y: number): void {
             const ev = new MouseEvent('click', {
                 view: window,
                 bubbles: true,
@@ -53,20 +86,20 @@ import { parseMarksIntoDOM } from '@/util/parse'
 
             this.$refs.text.dispatchEvent(ev)
         },
-        scrollAll: function () {
+        scrollAll: function (): void {
             for (const c of this.marks)
-                if (c[3] in this.$refs)
-                    this.$refs[c[3]].scrollTo(0, this.$refs.text.scrollTop)
+                if (c.id in this.$refs)
+                    this.$refs[c.id].scrollTo(0, this.$refs.text.scrollTop)
         },
     },
     computed: {
-        marks: function () {
+        marks: function (): Array<Mark> {
             return parseMarksIntoDOM(this.message)
         },
     },
     watch: {
         message: function (v: string): void {
-            v
+            v // do something with v
         },
     },
 })
@@ -75,10 +108,9 @@ export default class MessageText extends Vue {}
 
 <style scoped>
 mark {
-    color: transparent;
-    background-color: #00d9ff4d;
-
     pointer-events: all;
+
+    background-color: 'red';
 }
 
 mark:hover {
@@ -86,7 +118,6 @@ mark:hover {
 }
 
 #text {
-    overflow: auto;
     background: transparent;
 
     resize: none;
@@ -100,8 +131,13 @@ mark:hover {
     outline: none !important;
 }
 
+#text:active {
+    pointer-events: none;
+}
+
 #text,
-#copy {
+.copy {
+    overflow-y: auto;
     height: 100%;
     width: 100%;
     position: absolute;
@@ -116,9 +152,7 @@ mark:hover {
     font-size: 20px;
 }
 
-#copy {
-    overflow-y: auto;
-
+.copy {
     word-wrap: break-word;
     white-space: pre-wrap;
 
@@ -135,7 +169,7 @@ mark:hover {
                                   supported by Chrome, Edge, Opera and Firefox */
 }
 
-div::-webkit-scrollbar {
+.copy::-webkit-scrollbar {
     background-color: transparent;
 }
 

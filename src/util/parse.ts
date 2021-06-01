@@ -1,4 +1,6 @@
-import { phrases, Phrase, Detected } from './phrases'
+import { phrases } from './phrases'
+import { Detected } from '@/types/Detected'
+import { Mark } from '@/types/Mark'
 
 export const testString = (message: string): Array<Detected> => {
     const detected: Array<Detected> = []
@@ -16,10 +18,14 @@ export const testString = (message: string): Array<Detected> => {
     return detected
 }
 
-export const parseMarksIntoDOM = function(input: string) {
+export const parseMarksIntoDOM = function(input: string): Array<Mark> {
     const splits = []
     for (const d of testString(input))
-        splits.push(splitByIndicies(input, d.indices))
+        splits.push({
+            splits: splitByIndicies(input, d.indices),
+            id: `${d.indices[0]}i${d.indices[1]}`,
+            phrase: d.phrase,
+        })
 
     return splits
 }
@@ -41,7 +47,6 @@ const splitByIndicies = (
     string.slice(0, indices[0]),
     string.slice(indices[0], indices[1]),
     string.slice(indices[1]),
-    `${indices[0]}i${indices[1]}`
 ]
 
 const addTag = (splits: Array<string>, tag: string): string =>

@@ -131,10 +131,18 @@ img {
 #drag-bar {
     position: absolute;
     top: 0;
-    z-index: 20;
+    z-index: 200;
     width: 100%;
     height: 5%;
     background: transparent;
+}
+
+#drag-bar:hover {
+    cursor: grab;
+}
+
+#drag-bar:active {
+    cursor: grabbing;
 }
 
 .text {

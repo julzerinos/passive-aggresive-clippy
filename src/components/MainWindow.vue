@@ -18,7 +18,9 @@ export default class MainWindow extends Vue {}
 
 <style scoped>
 .main {
+    background-color: #008080;
     background-image: url('https://wallpapercave.com/wp/wp2754864.jpg');
+
     background-size: cover;
     background-position: left;
 
@@ -28,4 +30,4 @@ export default class MainWindow extends Vue {}
     left: 0;
     position: fixed;
 }
-</style>
+</style> 
