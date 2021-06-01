@@ -1,11 +1,11 @@
 import { Phrase } from '@/types/Phrase'
 
 export const strengths: Record<number, string> = {
-    1: '#BFF0D4',
-    2: '#B8E2C8',
-    3: '#ABC8C7',
-    4: '#A5B5BF',
-    5: '#B0A1BA',
+    1: '#75DBCD',
+    2: '#3777FF',
+    3: '#FFFD82',
+    4: '#F0544F',
+    5: '#D81E5B',
 }
 
 export const phrases: Array<Phrase> = [
@@ -98,7 +98,7 @@ export const phrases: Array<Phrase> = [
     {
         detect: /:-\)/gi,
         strength: 5,
-        why: "Now that's unacceptable.",
+        why: "Now that's just unacceptable.",
         replace: [],
     },
     {
@@ -122,7 +122,7 @@ export const phrases: Array<Phrase> = [
     {
         detect: /please advise/gi,
         strength: 4,
-        why: 'This is the essence of responsiblity transfer.',
+        why: 'This is the essence of responsiblity dumping.',
         replace: [],
     },
     {

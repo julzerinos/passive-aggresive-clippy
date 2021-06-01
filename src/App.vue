@@ -19,7 +19,7 @@ import Splash from '@/components/Splash.vue'
         showSplash: true,
     }),
     mounted: function (): void {
-        setTimeout(this.closeSplash, 5000)
+        setTimeout(this.closeSplash, 2500)
     },
     methods: {
         closeSplash: function (): void {

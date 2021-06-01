@@ -58,6 +58,7 @@ import { Phrase } from '@/types/Phrase'
         },
         generateMarkStyle: (strength: number): any => ({
             backgroundColor: strengths[strength],
+            opacity: .66
         }),
         messageChanged: function (e: InputEvent): void {
             // on message change by textarea event
@@ -109,8 +110,6 @@ export default class MessageText extends Vue {}
 <style scoped>
 mark {
     pointer-events: all;
-
-    background-color: 'red';
 }
 
 mark:hover {

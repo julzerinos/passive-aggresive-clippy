@@ -1,16 +1,28 @@
 <template>
     <div class="main">
-        <MessageWindow />
+        <NotepadWindow :zIndex="zIndex" @clicked="switchIndex" />
+        <MessageWindow :zIndex="-zIndex" @clicked="switchIndex" />
     </div>
 </template>
 
-<script>
+<script lang="ts">
 import { Options, Vue } from 'vue-class-component'
-import MessageWindow from './MessageWindow'
+import MessageWindow from './MessageWindow.vue'
+import NotepadWindow from './NotepadWindow.vue'
 
 @Options({
     components: {
         MessageWindow,
+        NotepadWindow,
+    },
+    data: () => ({
+        currentWindow: 0,
+        zIndex: 1,
+    }),
+    methods: {
+        switchIndex: function (index: number) {
+            this.zIndex = index
+        },
     },
 })
 export default class MainWindow extends Vue {}

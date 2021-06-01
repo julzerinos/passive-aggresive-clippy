@@ -1,8 +1,20 @@
 <template>
-    <div ref="draggable" :style="{zIndex:zIndex}" class="window" @mousedown="() => $emit('clicked', -1)">
-        <img src="~@/assets/message.png" />
+    <div
+        ref="draggable"
+        :style="{ zIndex: zIndex }"
+        class="window"
+        @mousedown="() => $emit('clicked', 1)"
+    >
+        <img src="~@/assets/notepad.png" />
         <div id="drag-bar" @mousedown="windowBarDrag" />
-        <message-text class="text" />
+        <div class="text">
+            {{ placeholder }}
+            <br />
+            See the source code on
+            <a href="https://github.com/julzerinos/passive-aggresive-clippy"
+                >Github</a
+            >
+        </div>
         <div class="scaler" @mousedown="windowScaleDrag" />
     </div>
 </template>
@@ -10,11 +22,10 @@
 <script lang="ts">
 import { Options, Vue } from 'vue-class-component'
 
-import MessageText from './MessageText.vue'
 import { clamp } from '@/util/math'
 
 @Options({
-    name: 'MessageWindow',
+    name: 'NotepadWindow',
     props: {
         zIndex: { required: true },
     },
@@ -27,12 +38,17 @@ import { clamp } from '@/util/math'
                 movementY: 0,
                 zoom: 1,
             },
+            placeholder: `Welcome to Passive Aggresive Clippy.
+
+Clippy is back and he's here to help you (albeit passive-aggressively) with your emails – so that you can be absolutely sure your messages are as friendly as humanely possible (which is probably not that much). Go ahead and type away with your beautiful words - watch for the highlighted sections and click them, so that Clippy can help you with the rest!
+                
+This is a small project as a tribute to the wonderful things I've read in the corporate email thread lifecycles. Here is to me hoping that my friends and co-workers will stumble upon a tool to help them notice the little things.
+                `,
         }
     },
-    components: { MessageText },
     mounted: function () {
         this.setDraggablePosition(
-            0.4 * window.innerWidth * Math.random(),
+            window.innerWidth - 750,
             0.4 * window.innerHeight * Math.random(),
         )
     },
@@ -96,7 +112,7 @@ import { clamp } from '@/util/math'
         },
     },
 })
-export default class MessageWindow extends Vue {}
+export default class NotepadWindow extends Vue {}
 </script>
 
 <style scoped>
@@ -150,13 +166,34 @@ img {
 
 .text {
     position: absolute;
-    bottom: 55px;
-    left: 11px;
+    top: 44px;
+    left: 6px;
 
-    height: 164px;
-    width: 509px;
+    height: 351px;
+    width: 660px;
 
     margin: 0;
     padding: 0;
+
+    background: transparent;
+
+    resize: none;
+
+    color: black;
+
+    overflow-y: auto;
+
+    box-sizing: border-box;
+
+    border: solid 4px transparent;
+
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 20px;
+
+    white-space: pre-wrap;
+}
+
+.text:focus {
+    outline: none !important;
 }
 </style>
