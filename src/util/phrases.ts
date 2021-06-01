@@ -98,7 +98,7 @@ export const phrases: Array<Phrase> = [
     {
         detect: /:-\)/gi,
         strength: 5,
-        why: "Now that's unforgivable.",
+        why: "Now that's unacceptable.",
         replace: [],
     },
     {
