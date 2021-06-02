@@ -10,7 +10,7 @@ export const strengths: Record<number, string> = {
 
 export const phrases: Array<Phrase> = [
     {
-        detect: /(thanks|thx|(thank you)) in advance|tia/gi,
+        detect: /(thanks|thx|(thank you)) in advance/gi,
         strength: 1,
         why:
             'Assumptive and directive. Might as well tell them you know they have no choice.',

@@ -8,7 +8,7 @@
         >
             {{ splits[0]
             }}<mark
-            @mouseover="(e) => onClickMark(e, phrase)"
+                @mouseover="(e) => onClickMark(e, phrase)"
                 :style="generateMarkStyle(phrase.strength)"
                 @click="(e) => onClickMark(e, phrase)"
                 >{{ splits[1] }}</mark
@@ -53,24 +53,11 @@ import { Phrase } from '@/types/Phrase'
         this.scrollAll()
     },
     methods: {
-        test: function () {
-            console.log('hovering')
-        },
         generateMarkStyle: (strength: number): any => ({
             backgroundColor: strengths[strength],
-            opacity: .66
+            opacity: 0.66,
         }),
-        messageChanged: function (e: InputEvent): void {
-            // on message change by textarea event
-        },
         onClickMark: function (event: MouseEvent, phrase: Phrase): void {
-            // this.agent.stopCurrent()
-            // this.agent.play(this.agent.animations()[2])
-
-            // this.$refs.text.setCaretPosition(0)
-
-            // document.elementFromPoint(event.clientX, event.clientY)?.click()
-
             this.$refs.clippy.move(event.clientX, event.clientY)
             this.$refs.clippy.speak(phrase.why)
 
@@ -96,11 +83,6 @@ import { Phrase } from '@/types/Phrase'
     computed: {
         marks: function (): Array<Mark> {
             return parseMarksIntoDOM(this.message)
-        },
-    },
-    watch: {
-        message: function (v: string): void {
-            v // do something with v
         },
     },
 })

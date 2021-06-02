@@ -16,7 +16,7 @@ import Splash from '@/components/Splash.vue'
         Splash,
     },
     data: (): any => ({
-        showSplash: true,
+        showSplash: process.env.NODE_ENV === 'production',
     }),
     mounted: function (): void {
         setTimeout(this.closeSplash, 2500)

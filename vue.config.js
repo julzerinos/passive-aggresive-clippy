@@ -1,3 +1,3 @@
 module.exports = {
-    publicPath: '/passive-aggresive-clippy/',
+    publicPath: process.env.NODE_ENV === 'production' ? '/passive-aggresive-clippy/' : '',
 }
